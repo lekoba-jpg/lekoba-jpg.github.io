@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="icon" href="C:\Users\DELL\OneDrive\clinic site\clinic-logo.jpg.jpeg" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+  <div class="register-box">
+    <h2>Register</h2>
+    <select id="role">
+      <option value="">Select Role</option>
+      <option value="customer">customer</option>
+      <option value="doctor">doctor</option>
+      <option value="pharmacist">pharmacist</option>
+    </select>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <p id="message"></p>
+    <a href="login.html">Already have an account? Login</a>
+  </div>
+
+  <script>
+    function register() {
+      const role = document.getElementById("role").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
+      if (!role || !username || !password) {
+        message.textContent = "❌ All fields must be filled.";
+        return;
+      }
+
+      // Get existing users or empty array
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Check if username is already taken
+      const userExists = users.some(user => user.username === username);
+      if (userExists) {
+        message.textContent = "❌ Username already taken.";
+        return;
+      }
+
+      // Add new user to the array
+      users.push({ username, password, role });
+
+      // Save back to localStorage
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Show success message
+      message.style.color = "green";
+      message.textContent = `✅ Registered as ${role.toUpperCase()} | Username: ${username}`;
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

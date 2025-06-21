@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Place Order</title>
+  <link rel="icon" href="C:\Users\DELL\OneDrive\clinic site\clinic-logo.jpg.jpeg" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+   <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav>
+  </header>
+ <div class="container">
+    <h2>Place an Order🛒</h2>
+
+    <!-- ✅ Dropdown for Medicine -->
+    <select id="medicine">
+      <option value="">-- Select Medicine --</option>
+      <option value="Paracetamol - 500mg">Paracetamol - 500mg</option>
+      <option value="Ibuprofen - 200mg">Ibuprofen - 200mg</option>
+      <option value="Amoxicillin - 250mg">Amoxicillin - 250mg</option>
+      <option value="Metformin - 500mg">Metformin - 500mg</option>
+      <option value="Lisinopril - 10mg">Lisinopril - 10mg</option>
+      <option value=" Cough & Syrup - 250mg" >Cough & Syrup - 250mg</option>
+      <option value="Vitamin C - 130mg ">Vitamin C - 130mg</option>
+      <option value="Metformin	- 100mg ">Metformin	- 100mg</option>
+      <option value="Hydrocortisone -240mg ">Hydrocortisone -240mg</option> 
+      <option value="Antacid Tablet -200mg ">Antacid Tablet -200mg</option>   
+    </select>
+
+    <input type="number" id="quantity" placeholder="Quantity">
+    <input type="text" id="address" placeholder="Delivery address">
+    
+    <button onclick="placeOrder()">Place Order</button>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    function placeOrder() {
+      const med = document.getElementById("medicine").value;
+      const qty = document.getElementById("quantity").value.trim();
+      const addr = document.getElementById("address").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!med || !qty || !addr) {
+        msg.style.color = "red";
+        msg.textContent = "❌ Fill all fields to place order.";
+        return;
+      }
+
+      let orders = JSON.parse(localStorage.getItem("staffOrders")) || [];
+      orders.push({
+        medicine: med,
+        quantity: qty,
+        address: addr,
+        time: new Date().toLocaleString()
+      });
+      localStorage.setItem("staffOrders", JSON.stringify(orders));
+
+      msg.style.color = "green";
+      msg.textContent = "✅ Order placed successfully!";
+      document.getElementById("medicine").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("address").value = "";
+    }
+  </script>
+</body>
+</html>

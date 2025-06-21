@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - 24Hr Clinic</title>
+  <link rel="icon" href="C:\Users\DELL\OneDrive\clinic site\clinic-logo.jpg.jpeg" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css.css">
+
+ </head>
+<body>
+      
+  <nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav> 
+
+<div class="container">
+  <h2>Place Emergency Order🛒</h2>
+  <form id="orderForm">
+    <label>Medicine Name</label>
+    <select id="medicine" required>
+      <option value="">Select Medicine</option>
+      <option>Paracetamol</option>
+      <option>Amoxicillin</option>
+      <option>Ibuprofen</option>
+      <option>Vitamin C</option>
+      <option>Cough Syrup</option>
+      <option>Antacid Tablets</option>
+    </select>
+
+    <label>Quantity</label>
+    <input type="number" id="quantity" min="1" required>
+
+    <label>Order Type</label>
+    <select id="orderType" onchange="toggleAddress()" required>
+      <option value="">Select</option>
+      <option value="delivery">Delivery</option>
+      <option value="collection">Self Collection</option>
+    </select>
+
+    <div id="delivery-address">
+      <label>Delivery Address</label>
+      <textarea id="address" rows="3" placeholder="Enter your address"></textarea>
+    </div>
+
+    <button type="submit">Submit Order</button>
+  </form>
+
+<div class="contact-icons">
+  <p>Order via:</p>
+  <a href="https://wa.me/26776401789" target="_blank" class="whatsapp">
+    <i class="fab fa-whatsapp"></i> WhatsApp Chat
+  </a>
+  <a href="https://www.facebook.com/YourClinicPage" target="_blank" class="facebook">
+    <i class="fab fa-facebook"></i> Facebook Chat
+  </a>
+  <a href="https://www.yourclinicwebsite.com" target="_blank" class="website">
+    <i class="fas fa-globe"></i> Visit Our Website
+  </a>
+</div>
+
+  <div class="status-box" id="orderStatus">
+    <strong>Order Status:</strong> Not placed yet.
+  </div>
+
+  <p style="text-align:center;"><a href="track-order.html">🔎 Track My Order</a></p>
+</div>
+
+<script>
+  function toggleAddress() {
+    const type = document.getElementById("orderType").value;
+    document.getElementById("delivery-address").style.display =
+      type === "delivery" ? "block" : "none";
+  }
+
+  document.getElementById("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const medicine = document.getElementById("medicine").value.trim();
+    const quantity = document.getElementById("quantity").value.trim();
+    const type = document.getElementById("orderType").value;
+    const address = document.getElementById("address").value.trim();
+
+    if (type === "delivery" && address === "") {
+      alert("Please enter delivery address.");
+      return;
+    }
+
+    const order = {
+      medicine,
+      quantity,
+      orderType: type,
+      address,
+      status: type === "delivery" ? "Being delivered" : "Ready for collection"
+    };
+
+    localStorage.setItem("customerOrder", JSON.stringify(order));
+
+    document.getElementById("orderStatus").innerHTML =
+      `<strong>Order Status:</strong> ${order.status}`;
+
+    alert("✅ Order placed successfully!");
+  });
+</script>
+
+</body>
+</html>

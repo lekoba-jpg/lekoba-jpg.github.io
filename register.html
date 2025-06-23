@@ -4,82 +4,66 @@
   <meta charset="UTF-8">
   <title>Register</title>
   <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
-  <div class="logo">
-  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
-  <h1>24 Hour Dispensary Clinic Management</h1>
-</div>
   <link rel="stylesheet" href="style.css.css">
 </head>
 <body>
- <div class="register-box">
-    <h2>Create Account</h2>
-    <form onsubmit="return registerUser()">
-      <label>Username</label>
-      <input type="text" id="username" required>
-
-      <label>Select Role</label>
-      <select id="role" required>
-        <option value="">-- Choose Role --</option>
-        <option value="customer">Customer</option>
-        <option value="doctor">Doctor</option>
-        <option value="pharmacist">Pharmacist</option>
-      </select>
-
-      <label>Password</label>
-      <input type="password" id="password" required>
-
-      <label>Confirm Password</label>
-      <input type="password" id="confirm" required>
-
-      <p id="error"></p>
-      <button type="submit">Register</button>
-    </form>
-
-    <div class="link">
-      <a href="login.html">Already have an account? Login</a>
-    </div>
+  <div class="logo">
+    <img src="clinic-logo.jpg.PNG" alt="Clinic Logo" style="width:290px;">
+    <h1>24 Hour Dispensary Clinic Management</h1>
+  </div>
+<div class="register-box">
+    <h2>Register</h2>
+    <select id="role">
+      <option value="">Select Role</option>
+      <option value="customer">customer</option>
+      <option value="doctor">doctor</option>
+      <option value="pharmacist">pharmacist</option>
+    </select>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <p id="message"></p>
+    <a href="login.html">Already have an account? Login</a>
   </div>
 
   <script>
-    function registerUser() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const confirm = document.getElementById('confirm').value;
-      const role = document.getElementById('role').value;
-      const error = document.getElementById('error');
+    function register() {
+      const role = document.getElementById("role").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
 
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$!%*?#&_]{8,}$/;
-
-      if (!username || !role || !password || !confirm) {
-        error.textContent = "All fields must be filled.";
-        return false;
+      if (!role || !username || !password) {
+        message.textContent = "❌ All fields must be filled.";
+        return;
       }
 
-      if (password !== confirm) {
-        error.textContent = "Passwords do not match.";
-        return false;
+      // Get existing users or empty array
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Check if username is already taken
+      const userExists = users.some(user => user.username === username);
+      if (userExists) {
+        message.textContent = "❌ Username already taken.";
+        return;
       }
 
-      if (!passwordPattern.test(password)) {
-        error.textContent = "Password must be at least 8 characters, with uppercase, lowercase, number, and special character.";
-        return false;
-      }
+      // Add new user to the array
+      users.push({ username, password, role });
 
-      let users = JSON.parse(localStorage.getItem("users") || "[]");
-
-      if (users.find(user => user.username === username)) {
-        error.textContent = "Username already taken.";
-        return false;
-      }
-
-      users.push({ username, role, password });
+      // Save back to localStorage
       localStorage.setItem("users", JSON.stringify(users));
 
-      alert("Registration successful! Please log in.");
-      window.location.href = "login.html";
-      return false;
+      // Show success message
+      message.style.color = "green";
+      message.textContent = `✅ Registered as ${role.toUpperCase()} | Username: ${username}`;
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
     }
   </script>
-
 </body>
-</html> 
+</html>
+  

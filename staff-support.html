@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Support Panel</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+  </head>
+<body>
+
+<nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav> 
+
+  <!-- 🔔 Notification Bell -->
+  <div class="bell" onclick="scrollToMessages()">
+    🛎️
+    <div id="dot" class="notification-dot" style="display: none;"></div>
+  </div>
+
+  <audio id="alertSound" src="sounds/notification.mp3" preload="auto"></audio>
+
+  <h2>Customer Support Messages</h2>
+  <div id="messages"></div>
+
+  <script>
+    function scrollToMessages() {
+      document.getElementById("messages").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function loadMessages() {
+      const alertSound = document.getElementById("alertSound");
+      const container = document.getElementById("messages");
+      const stored = localStorage.getItem("supportMessages");
+      let messages = stored ? JSON.parse(stored) : [];
+
+      container.innerHTML = "";
+      let unrepliedCount = 0;
+
+      messages.forEach((msg, index) => {
+        if (!msg.reply) unrepliedCount++;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <strong>Name:</strong> ${msg.name}<br>
+          <strong>Email:</strong> ${msg.email}<br>
+          <strong>Message:</strong> ${msg.message}<br>
+          <strong>Time:</strong> ${msg.time}<br>
+          <strong>Reply:</strong> ${msg.reply || "<em>Not yet replied</em>"}<br><br>
+          <textarea id="reply-${index}" placeholder="Reply here...">${msg.reply || ""}</textarea><br>
+          <button onclick="replyMessage(${index})">Send Reply</button>
+        `;
+        container.appendChild(card);
+      });
+
+      const dot = document.getElementById("dot");
+      if (unrepliedCount > 0) {
+        dot.style.display = "block";
+        dot.textContent = unrepliedCount;
+        alertSound.play();
+      } else {
+        dot.style.display = "none";
+      }
+    }
+
+    function replyMessage(index) {
+      let messages = JSON.parse(localStorage.getItem("supportMessages") || "[]");
+      const replyText = document.getElementById(`reply-${index}`).value.trim();
+      messages[index].reply = replyText;
+      localStorage.setItem("supportMessages", JSON.stringify(messages));
+      loadMessages();
+    }
+
+    window.onload = loadMessages;
+  </script>
+
+</body>
+</html>

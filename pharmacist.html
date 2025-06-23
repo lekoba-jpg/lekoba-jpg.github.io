@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacist - View Prescription</title>
+ <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav> 
+
+  <h2>Pharmacist - View Uploaded Prescription📤📋</h2>
+  <p class="note">Select a PDF or image (JPG/PNG) file</p>
+
+  <input type="file" id="prescriptionInput" accept=".pdf,.jpg,.jpeg,.png" />
+  
+  <div class="preview" id="previewArea"></div>
+
+  <script>
+    const input = document.getElementById('prescriptionInput');
+    const preview = document.getElementById('previewArea');
+
+    input.addEventListener('change', function () {
+      const file = input.files[0];
+      preview.innerHTML = ""; // Clear previous preview
+
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+
+        if (file.type === "application/pdf") {
+          // Show PDF
+          const iframe = document.createElement("iframe");
+          iframe.src = fileURL;
+          iframe.type = "application/pdf";
+          preview.appendChild(iframe);
+        } else if (file.type.startsWith("image/")) {
+          // Show Image
+          const img = document.createElement("img");
+          img.src = fileURL;
+          preview.appendChild(img);
+        } else {
+          preview.innerHTML = "<p style='color:red;'>Unsupported file type!</p>";
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

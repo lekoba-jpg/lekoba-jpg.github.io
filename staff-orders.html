@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Orders</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav>
+  <h2>📋 Customer Orders</h2>
+
+  <div id="notification-area"></div>
+  <div id="orderContainer"></div>
+
+  <script>
+    function loadOrdersForStaff() {
+      const orders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+      const container = document.getElementById("orderContainer");
+      const notification = document.getElementById("notification-area");
+
+      container.innerHTML = "";
+      notification.innerHTML = "";
+
+      if (localStorage.getItem("newOrderNotification") === "yes") {
+        notification.innerHTML = `<div class="notification">🔔 New Order Received</div>`;
+        localStorage.removeItem("newOrderNotification");
+      }
+
+      if (orders.length === 0) {
+        container.innerHTML = "<div class='no-orders'>No orders found.</div>";
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const box = document.createElement("div");
+        box.className = "order-box";
+        box.innerHTML = `
+          <strong>Medicine:</strong> ${order.medicine}<br>
+          <strong>Quantity:</strong> ${order.quantity}<br>
+          <strong>Order Type:</strong> ${order.orderType}<br>
+          <strong>Address:</strong> ${order.address || "N/A"}<br>
+          <strong>Status:</strong> <span id="status-${index}">${order.status}</span>
+
+          <div class="status-select">
+            <label>Update Status:</label>
+            <select onchange="updateStatus(${index}, this.value)">
+              <option value="">Select</option>
+              <option value="Packaging">Packaging</option>
+              <option value="Ready to Collect">Ready to Collect</option>
+              <option value="Being Delivered">Being Delivered</option>
+              <option value="Not Available">Not Available</option>
+            </select>
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    function updateStatus(index, newStatus) {
+      const orders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+      orders[index].status = newStatus;
+      localStorage.setItem("customerOrders", JSON.stringify(orders));
+      document.getElementById(`status-${index}`).innerText = newStatus;
+      alert("✅ Order status updated.");
+    }
+
+    loadOrdersForStaff();
+  </script>
+
+</body>
+</html>

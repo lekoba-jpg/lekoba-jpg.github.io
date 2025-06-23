@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Place Order</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+   <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav>
+  </header>
+  <div class="container">
+    <h2>📦 Staff Place Order</h2>
+    <form id="staffOrderForm">
+      <label>Medicine Name</label>
+      <select id="medicine" required>
+        <option value="">-- Select Medicine --</option>
+        <option>Paracetamol - 500mg</option>
+        <option>Ibuprofen - 200mg</option>
+        <option>Amoxicillin - 250mg</option>
+        <option>Metformin - 500mg</option>
+        <option>Lisinopril - 10mg</option>
+        <option>Cough Syrup - 250mg</option>
+        <option>Vitamin C - 130mg</option>
+        <option>Hydrocortisone - 240mg</option>
+        <option>Antacid Tablets - 200mg</option>
+      </select>
+
+      <label>Quantity</label>
+      <input type="number" id="quantity" min="1" required>
+
+      <label>Order Type</label>
+      <select id="orderType" onchange="toggleAddress()" required>
+        <option value="">Select</option>
+        <option value="delivery">Delivery</option>
+        <option value="collection">Self Collection</option>
+      </select>
+
+      <div id="delivery-address">
+        <label>Delivery Address</label>
+        <textarea id="address" rows="3" placeholder="Enter delivery address..."></textarea>
+      </div>
+
+      <button type="submit">Place Order</button>
+      <p id="msg"></p>
+    </form>
+  </div>
+
+  <script>
+    function toggleAddress() {
+      const type = document.getElementById("orderType").value;
+      document.getElementById("delivery-address").style.display =
+        type === "delivery" ? "block" : "none";
+    }
+
+    document.getElementById("staffOrderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const med = document.getElementById("medicine").value;
+      const qty = document.getElementById("quantity").value.trim();
+      const type = document.getElementById("orderType").value;
+      const addr = document.getElementById("address").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!med || !qty || !type || (type === "delivery" && addr === "")) {
+        msg.style.color = "red";
+        msg.textContent = "❌ Please fill all required fields.";
+        return;
+      }
+
+      const order = {
+        medicine: med,
+        quantity: qty,
+        orderType: type,
+        address: addr,
+        status: type === "delivery" ? "Being Delivered" : "Ready for Collection",
+        time: new Date().toLocaleString()
+      };
+
+      let staffOrders = JSON.parse(localStorage.getItem("staffOrders")) || [];
+      staffOrders.push(order);
+      localStorage.setItem("staffOrders", JSON.stringify(staffOrders));
+      localStorage.setItem("newStaffOrderNotification", "yes");
+
+      msg.style.color = "green";
+      msg.textContent = "✅ Order placed successfully!";
+
+      document.getElementById("medicine").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("orderType").value = "";
+      document.getElementById("address").value = "";
+      toggleAddress();
+    });
+  </script>
+</body>
+</html>

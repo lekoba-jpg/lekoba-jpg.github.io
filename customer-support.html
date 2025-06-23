@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>24 Hr Clinic - Contact</title>
+   <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <link rel="stylesheet" href="style.css.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">
+      <img src="clinic-logo.jpg.PNG" alt="Clinic Logo" />
+      <h1>24 Hour Dispensary Clinic Management</h1>
+    </div>
+    <ul>
+      <li><a href="staff.html">Staff</a> or <a href="customer.html">Customer</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h2>Contact Us🆘</h2>
+   <form onsubmit="sendMessage(); return false;">
+    <input type="text" id="fullname" placeholder="Full Name" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <textarea id="message" placeholder="Your Message" required></textarea><br>
+    <button type="submit">Send</button>
+  </form>
+  <p id="confirmation" style="color:green;"></p>
+
+  <script>
+    function sendMessage() {
+      const name = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('message').value.trim();
+
+      if (!name || !email || !msg) return;
+
+      const newMsg = {
+        name,
+        email,
+        message: msg,
+        reply: "",
+        time: new Date().toLocaleString()
+      };
+
+      let messages = JSON.parse(localStorage.getItem("supportMessages") || "[]");
+      messages.push(newMsg);
+      localStorage.setItem("supportMessages", JSON.stringify(messages));
+
+      document.getElementById('confirmation').textContent = "Message sent!";
+      document.getElementById('fullname').value = "";
+      document.getElementById('email').value = "";
+      document.getElementById('message').value = "";
+    }
+  </script>  
+  </div>
+<div class="bottom-section">
+</div>
+</body>
+</html>
+<!-- Floating Social Icons -->
+<div class="floating-icons">
+  <a href="https://wa.me/26776401789" target="_blank" title="Chat on WhatsApp">
+    <img src="WHATSAPP.png" alt="WhatsApp Icon" />
+  </a>
+  <a href="https://facebook.com/24-HourDispensary " target="_blank" title="Visit us on Facebook">
+    <img src="FACEBOOK.png" alt="Facebook Icon" />
+  </a>
+</div>
+

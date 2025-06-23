@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - 24Hr Clinic</title>
+
+  
+  <script>
+    if (localStorage.getItem("loggedIn") !== "true" || 
+        (localStorage.getItem("userRole") !== "doctor" && localStorage.getItem("userRole") !== "pharmacist")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+
+ 
+  <div class="logo">
+    <img src="clinic-logo.jpg.PNG" alt="Clinic Logo" >
+    <h1>24 Hour Dispensary Clinic Management</h1>
+  </div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+
+<body>
+
+  <nav>
+    <ul>
+      <a href="index.html">Home</a>
+      <a href="staff.html">Staff</a>
+      <a href="inventory.html" class="active">Inventory</a>
+      <a href="services.html">Services</a>
+      <a href="order.html">Place Order</a>
+      <a href="manage-order.html">My Orders</a>
+      <a href="pharmacist.html">Pharmacist Review</a>
+      <a href="medicine.html">Medicine</a>
+      <a href="about.html">About</a>
+      <a href="staff-support.html">staff-support-inbox</a>
+      <a href="staff-orders.html">Orders&Status</a>
+    </ul>
+  </nav> 
+
+  <header class="navbar">
+    <div class="logo">🩺 24Hr Dispensary</div>
+  </header>
+
+  <main class="content">
+    <h1>Welcome, Staff</h1>
+    <p>Access orders, reviews, and manage the clinic system.</p>
+
+     <ul>
+       <li><a href="index.html" class="active">Home</a></li>
+       <li><a href="services.html">🆘Services</a></li>
+       <li><a href="medicine.html">💊 Medicines</a></li>
+       <li><a href="order.html">🛒 Place a medicine order</a></li>
+       <li><a href="orders.html">📦 Track your orders</a></li>
+       <li><a href="pharmacist.html">💊 Pharmacist Dashboard</a></li>
+       <li><a href="inventory.html">📋 Manage Inventory</a></li>
+       <li><a href="about.html">📋About</a></li>
+       <li><a href="staff-support.html">staff-support-inbox</a></li>
+       <li><a href="staff-orders.html">Orders&Status</a></li>
+     </ul>
+  </main>
+
+  <!-- Logout Button -->
+  <button onclick="logout()" style="margin: 20px; padding: 10px 20px; background: crimson; color: white; border: none; border-radius: 5px;">
+    Logout
+  </button>
+<!-- Logout Button activation -->
+  <script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

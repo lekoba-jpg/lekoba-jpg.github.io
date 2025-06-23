@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>24 hour clinic - customerOrders</title>
+  <link rel="icon" href="clinic-logo.jpg.jpeg" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css.css">
+
+ </head>
+<body>
+      
+  <nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav> 
+
+<h2>📦 Place Emergency Order</h2>
+
+  <form id="orderForm">
+    <label>Medicine</label>
+    <select id="medicine" required>
+      <option value="">Select</option>
+      <option>Paracetamol</option>
+      <option>Amoxicillin</option>
+      <option>Ibuprofen</option>
+      <option>Vitamin C</option>
+      <option>Cough Syrup</option>
+      <option>Antacid Tablets</option>
+    </select>
+
+    <label>Quantity</label>
+    <input type="number" id="quantity" min="1" required>
+
+    <label>Order Type</label>
+    <select id="orderType" onchange="toggleAddress()" required>
+      <option value="">Select</option>
+      <option value="delivery">Delivery</option>
+      <option value="collection">Self Collection</option>
+    </select>
+
+    <div id="delivery-address" style="display: none;">
+      <label>Delivery Address</label>
+      <textarea id="address" placeholder="Enter your address"></textarea>
+    </div>
+
+    <input type="hidden" id="editingIndex">
+    <button type="submit">Add/Update Order</button>
+  </form>
+
+  <div class="orders">
+    <h3>My Orders</h3>
+    <div id="orderList"></div>
+  </div>
+
+  <div class="contact-icons">
+    <p>Or use:</p>
+    <a href="https://wa.me/26776401789" target="_blank" class="whatsapp">
+      <i class="fab fa-whatsapp"></i> WhatsApp
+    </a>
+    <a href="https://facebook.com/YourClinicPage" target="_blank" class="facebook">
+      <i class="fab fa-facebook"></i> Facebook
+    </a>
+    <a href="https://yourclinicwebsite.com" target="_blank" class="website">
+      <i class="fas fa-globe"></i> Our Website
+    </a>
+  </div>
+
+  <script>
+    function toggleAddress() {
+      const type = document.getElementById("orderType").value;
+      document.getElementById("delivery-address").style.display = (type === "delivery") ? "block" : "none";
+    }
+
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+      const list = document.getElementById("orderList");
+      list.innerHTML = "";
+
+      if (orders.length === 0) {
+        list.innerHTML = "<p>No orders placed yet.</p>";
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const div = document.createElement("div");
+        div.className = "order-item";
+        div.innerHTML = `
+          <strong>${order.medicine}</strong> (x${order.quantity})<br>
+          Type: ${order.orderType}<br>
+          Address: ${order.address || "N/A"}<br>
+          Status: <strong>${order.status}</strong><br><br>
+          
+          
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function editOrder(index) {
+      const orders = JSON.parse(localStorage.getItem("customerOrders"));
+      const order = orders[index];
+
+      document.getElementById("medicine").value = order.medicine;
+      document.getElementById("quantity").value = order.quantity;
+      document.getElementById("orderType").value = order.orderType;
+      document.getElementById("address").value = order.address;
+      document.getElementById("editingIndex").value = index;
+
+      toggleAddress();
+    }
+
+    function deleteOrder(index) {
+      const orders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+      orders.splice(index, 1);
+      localStorage.setItem("customerOrders", JSON.stringify(orders));
+      loadOrders();
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const medicine = document.getElementById("medicine").value;
+      const quantity = document.getElementById("quantity").value;
+      const orderType = document.getElementById("orderType").value;
+      const address = document.getElementById("address").value.trim();
+      const editingIndex = document.getElementById("editingIndex").value;
+
+      if (orderType === "delivery" && address === "") {
+        alert("Please enter delivery address");
+        return;
+      }
+
+      const newOrder = {
+        medicine,
+        quantity,
+        orderType,
+        address,
+        status: "Waiting for processing"
+      };
+
+      let orders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+
+      if (editingIndex === "") {
+        orders.push(newOrder);
+        alert("✅ Order added!");
+      } else {
+        orders[editingIndex] = newOrder;
+        alert("✏️ Order updated!");
+        document.getElementById("editingIndex").value = "";
+      }
+
+      localStorage.setItem("customerOrders", JSON.stringify(orders));
+      localStorage.setItem("newOrderNotification", "yes"); // notify staff
+
+      loadOrders();
+      document.getElementById("orderForm").reset();
+      toggleAddress();
+    });
+
+    loadOrders();
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload & View Prescription</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+    
+  <nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav>
+
+  <div class="upload-box">
+    <h2>Upload Prescription📤(Customer)</h2>
+    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
+    <br>
+    <button onclick="previewFile()">Upload</button>
+    <p id="uploadStatus"></p>
+    <div id="previewArea"></div>
+  </div>
+
+  <script>
+    function previewFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      const preview = document.getElementById('previewArea');
+      const status = document.getElementById('uploadStatus');
+
+      if (!file) {
+        status.innerHTML = "❗ Please select a file.";
+        return;
+      }
+
+      const fileURL = URL.createObjectURL(file);
+      status.innerHTML = "<span class='success'>Prescription uploaded successfully!</span>";
+
+      preview.innerHTML = ""; // Clear previous preview
+
+      if (file.type === "application/pdf") {
+        const iframe = document.createElement("iframe");
+        iframe.src = fileURL;
+        preview.appendChild(iframe);
+      } else if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = fileURL;
+        preview.appendChild(img);
+      } else {
+        preview.innerHTML = "<p style='color:red;'>Unsupported file type.</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>

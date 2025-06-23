@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Orders</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h2>My Orders📦</h2>
+    <div id="ordersContainer"></div>
+  </div>
+
+  <script>
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem("staffOrders")) || [];
+      const container = document.getElementById("ordersContainer");
+      container.innerHTML = "";
+
+      if (orders.length === 0) {
+        container.innerHTML = "<p>No orders have been placed yet.</p>";
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const div = document.createElement("div");
+        div.className = "order-item";
+        div.innerHTML = `
+          <strong>Medicine:</strong> ${order.medicine}<br>
+          <strong>Quantity:</strong> ${order.quantity}<br>
+          <strong>Address:</strong> ${order.address}<br>
+          <small>Placed on: ${order.time}</small>
+         
+         `;
+        container.appendChild(div);
+      });
+    }
+
+    function deleteOrder(index) {
+      let orders = JSON.parse(localStorage.getItem("staffOrders")) || [];
+      orders.splice(index, 1);
+      localStorage.setItem("staffOrders", JSON.stringify(orders));
+      loadOrders(); // refresh list
+    }
+
+    window.onload = loadOrders;
+  </script>
+
+</body>
+</html>

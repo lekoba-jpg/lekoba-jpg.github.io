@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+ <div class="register-box">
+    <h2>Create Account</h2>
+    <form onsubmit="return registerUser()">
+      <label>Username</label>
+      <input type="text" id="username" required>
+
+      <label>Select Role</label>
+      <select id="role" required>
+        <option value="">-- Choose Role --</option>
+        <option value="customer">Customer</option>
+        <option value="doctor">Doctor</option>
+        <option value="pharmacist">Pharmacist</option>
+      </select>
+
+      <label>Password</label>
+      <input type="password" id="password" required>
+
+      <label>Confirm Password</label>
+      <input type="password" id="confirm" required>
+
+      <p id="error"></p>
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="link">
+      <a href="login.html">Already have an account? Login</a>
+    </div>
+  </div>
+
+  <script>
+    function registerUser() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      const role = document.getElementById('role').value;
+      const error = document.getElementById('error');
+
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&_])[A-Za-z\d@$!%*?#&_]{8,}$/;
+
+      if (!username || !role || !password || !confirm) {
+        error.textContent = "All fields must be filled.";
+        return false;
+      }
+
+      if (password !== confirm) {
+        error.textContent = "Passwords do not match.";
+        return false;
+      }
+
+      if (!passwordPattern.test(password)) {
+        error.textContent = "Password must be at least 8 characters, with uppercase, lowercase, number, and special character.";
+        return false;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users") || "[]");
+
+      if (users.find(user => user.username === username)) {
+        error.textContent = "Username already taken.";
+        return false;
+      }
+
+      users.push({ username, role, password });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Registration successful! Please log in.");
+      window.location.href = "login.html";
+      return false;
+    }
+  </script>
+
+</body>
+</html> 

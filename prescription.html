@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Prescription</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+   
+  <nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav>
+  <header><h1>Upload Prescription</h1></header>
+  <div class="container">
+    <input type="file" id="file-upload" accept="image/*,application/pdf" />
+    <button onclick="uploadPrescription()">Upload</button>
+    <p id="status"></p>
+  </div>
+
+  <script src="js/prescription.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>24 hour clinic - Inbox</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+   <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+
+  <link rel="stylesheet" href="style.css.css">
+  </head>
+<body>
+
+<nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav> 
+
+ <div class="bell" onclick="scrollToInbox()">
+    🛎️ <div id="badge" class="notification-badge" style="display:none;">0</div>
+  </div>
+
+  <h2>My Support Inbox</h2>
+  <div id="inbox"></div>
+  <!-- 🔄 Switch Account Button -->
+<div style="text-align:center; margin-top: 10px;">
+  <button onclick="switchEmail()">🔄 Switch Email</button>
+</div>
+
+  <audio id="notify-sound" src="https://www.soundjay.com/buttons/sounds/beep-08b.mp3" preload="auto"></audio>
+
+  <script>
+    function scrollToInbox() {
+      document.getElementById("inbox").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function loadInbox() {
+  let email = localStorage.getItem("customerEmail");
+  if (!email) {
+    email = prompt("Enter your registered email:");
+    if (email) localStorage.setItem("customerEmail", email.toLowerCase().trim());
+  }
+
+  const stored = localStorage.getItem("supportMessages");
+  const messages = stored ? JSON.parse(stored) : [];
+  const inboxDiv = document.getElementById("inbox");
+  const badge = document.getElementById("badge");
+  inboxDiv.innerHTML = "";
+
+  const userMsgs = messages.filter(msg => msg.email === email);
+  let newReplies = 0;
+
+  userMsgs.forEach((msg, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const hasReply = msg.reply && msg.replySeen === false;
+
+    if (hasReply) {
+      newReplies++;
+    }
+
+    card.innerHTML = `
+      <strong>Your Message:</strong><br>${msg.message}<br><br>
+      <strong>Reply from Clinic:</strong><br>${msg.reply ? msg.reply : "<em>No reply yet</em>"}<br>
+      <small><em>Sent on: ${msg.time}</em></small><br><br>
+      ${hasReply ? `<button onclick="markSeen(${messages.indexOf(msg)})">✅ Mark as Received</button>` : ""}
+    `;
+
+    inboxDiv.appendChild(card);
+  });
+
+  if (newReplies > 0) {
+    badge.textContent = newReplies;
+    badge.style.display = "block";
+    document.getElementById("notify-sound").play();
+  } else {
+    badge.style.display = "none";
+  }
+
+  
+}
+  function switchEmail() {
+    localStorage.removeItem("customerEmail");
+    loadInbox(); // re-prompt for email
+  }
+</script>
+

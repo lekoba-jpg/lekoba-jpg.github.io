@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Management</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG"alt="Clinic Logo">
+    <h1>24 Hour Dispensary Clinic Management</h1>
+  </div>
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="staff.html">Staff</a></li>
+    </ul>
+  </nav>
+  <header>
+    <h1 style="text-align:center;">💊 Medicine Inventory</h1>
+  </header>
+
+  <div class="container">
+    <h2>Add / Update Medicine💊</h2>
+
+    <select id="med-name">
+      <option value="">-- Select or Enter Medicine --</option>
+      <!-- Options will be dynamically added here -->
+    </select>
+
+    <input type="text" id="custom-med-name" placeholder="Or type new medicine name" />
+    <input type="number" id="med-qty" placeholder="Quantity" />
+    <input type="text" id="med-type" placeholder="Medicine Type (e.g. Antibiotic)" />
+    <input type="date" id="med-expiry" />
+
+    <div style="display: flex; justify-content: space-between;">
+      <button class="action-btn" onclick="addMedicine()">Add Medicine</button>
+      <button class="action-btn update-btn" onclick="updateMedicine()">Update Quantity</button>
+    </div>
+
+    <p id="message" class="msg"></p>
+
+    <h2>Current Stock</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine Name</th>
+          <th>Type</th>
+          <th>Stock</th>
+          <th>Expiry</th>
+        </tr>
+      </thead>
+      <tbody id="inventory-table">
+        <!-- Data will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadInventory() {
+      const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+      const table = document.getElementById('inventory-table');
+      const dropdown = document.getElementById('med-name');
+
+      table.innerHTML = "";
+      dropdown.innerHTML = '<option value="">-- Select or Enter Medicine --</option>';
+
+      inventory.forEach(item => {
+        // Add to table
+        const row = `<tr>
+          <td>${item.name}</td>
+          <td>${item.type}</td>
+          <td>${item.quantity}</td>
+          <td>${item.expiry}</td>
+        </tr>`;
+        table.innerHTML += row;
+
+        // Add to dropdown
+        const opt = document.createElement("option");
+        opt.value = item.name;
+        opt.textContent = item.name;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    function getFinalMedicineName() {
+      const dropdown = document.getElementById("med-name").value.trim();
+      const customInput = document.getElementById("custom-med-name").value.trim();
+      return customInput !== "" ? customInput : dropdown;
+    }
+
+    function addMedicine() {
+      const name = getFinalMedicineName();
+      const type = document.getElementById("med-type").value.trim();
+      const qty = parseInt(document.getElementById("med-qty").value);
+      const expiry = document.getElementById("med-expiry").value;
+      const msg = document.getElementById("message");
+
+      if (!name || !type || isNaN(qty) || qty <= 0 || !expiry) {
+        msg.textContent = "❌ Please fill in all fields correctly.";
+        msg.style.color = "red";
+        return;
+      }
+
+      let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+      const exists = inventory.find(item => item.name.toLowerCase() === name.toLowerCase());
+      if (exists) {
+        msg.textContent = "❗ Medicine already exists. Use 'Update Quantity' instead.";
+        msg.style.color = "orange";
+        return;
+      }
+
+      inventory.push({ name, type, quantity: qty, expiry });
+      localStorage.setItem("inventory", JSON.stringify(inventory));
+      msg.textContent = "✅ Medicine added successfully!";
+      msg.style.color = "green";
+      clearFields();
+      loadInventory();
+    }
+
+    function updateMedicine() {
+      const name = getFinalMedicineName();
+      const qty = parseInt(document.getElementById("med-qty").value);
+      const expiry = document.getElementById("med-expiry").value;
+      const type = document.getElementById("med-type").value.trim();
+      const msg = document.getElementById("message");
+
+      if (!name || isNaN(qty) || qty <= 0 || !expiry || !type) {
+        msg.textContent = "❌ Please fill in all fields to update.";
+        msg.style.color = "red";
+        return;
+      }
+
+      let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+      const item = inventory.find(med => med.name.toLowerCase() === name.toLowerCase());
+
+      if (item) {
+        item.quantity = qty;
+        item.expiry = expiry;
+        item.type = type;
+        localStorage.setItem("inventory", JSON.stringify(inventory));
+        msg.textContent = "✅ Quantity updated successfully!";
+        msg.style.color = "green";
+        clearFields();
+        loadInventory();
+      } else {
+        msg.textContent = "❌ Medicine not found. Try adding it first.";
+        msg.style.color = "red";
+      }
+    }
+
+    function clearFields() {
+      document.getElementById("med-name").value = "";
+      document.getElementById("custom-med-name").value = "";
+      document.getElementById("med-type").value = "";
+      document.getElementById("med-qty").value = "";
+      document.getElementById("med-expiry").value = "";
+    }
+
+    window.onload = loadInventory;
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - 24Hr Clinic</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="style.css.css">
+  </head>
+<body>
+      
+  <nav>
+    <ul>
+      <li><a href="customer.html">Customer</a></li>
+    </ul>
+  </nav>
+
+<div class="box">
+  <h2>Your Current Order🔎📦</h2>
+  <div id="orderInfo"></div>
+  <a href="customer-order.html">← Back to Order Page</a>
+</div>
+
+<script>
+  const order = JSON.parse(localStorage.getItem("customerOrder"));
+
+  const display = document.getElementById("orderInfo");
+
+  if (!order) {
+    display.innerHTML = "<p>No order found. Please place an order first.</p>";
+  } else {
+    display.innerHTML = `
+      <p><strong>Medicine:</strong> ${order.medicine}</p>
+      <p><strong>Quantity:</strong> ${order.quantity}</p>
+      <p><strong>Order Type:</strong> ${order.orderType}</p>
+      ${order.orderType === "delivery" ? `<p><strong>Address:</strong> ${order.address}</p>` : ""}
+      <div class="status"><strong>Status:</strong> ${order.status}</div>
+    `;
+  }
+</script>
+
+</body>
+</html>

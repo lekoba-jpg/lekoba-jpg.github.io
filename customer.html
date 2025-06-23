@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - 24Hr Clinic</title>
+  <link rel="icon" href="clinic-logo.jpg.PNG" type="image/png" />
+ <script>
+    if (localStorage.getItem("loggedIn") !== "true" || localStorage.getItem("userRole") !== "customer") {
+      window.location.href = "login.html";
+    }
+ </script>
+
+  <link rel="icon" href="clinic-logo.jpg.jpeg" type="image/png" />
+  <div class="logo">
+  <img src="clinic-logo.jpg.PNG" alt="Clinic Logo">
+  <h1>24 Hour Dispensary Clinic Management</h1>
+</div>
+  <link rel="stylesheet" href="style.css.css">
+</head>
+<body>
+   
+  <nav>
+    <ul>
+       <a href="index.html">Home</a>
+       <a href="customer.html">Customer</a>
+       <a href="about.html">About</a>
+       <a href="services.html">Services</a>
+       <a href="UPLOAD-REVIEW-PHARMACIST.html">Upload Prescription</a>
+       <a href="customer-order.html">customer-order</a>
+       <a href="customer-support.html" class="active">Support</a>
+       <a href="customer-inbox.html">Inbox</a>
+    </ul>
+  </nav>
+    <header class="navbar">
+    <div class="logo">💊 24Hr Dispensary</div>
+    
+  </header>
+
+  <main class="content">
+    <h1>Welcome, Customer</h1>
+    <p>Explore services and manage your prescriptions.</p>
+
+    <ul>
+       <li><a href="index.html" class="active">Home</a></li>
+       <li><a href="services.html">🆘Services</a></li>
+       <li><a href="UPLOAD-REVIEW-PHARMACIST.html">📤 Upload a prescription</a> (PDF or image)</li>
+       <li><a href="customer-support.html">🆘Support</a></li>
+       <li><a href="about.html">📋About</a></li>
+       <li><a href="customer-order.html">🛒customer-order</a></li>
+       <li><a href="customer-inbox.html">Inbox</a></li>
+    </ul>
+  </main>
+
+  <!-- ✅ Logout Button -->
+  <button onclick="logout()" style="margin: 20px; padding: 10px 20px; background: crimson; color: white; border: none; border-radius: 5px;">
+    Logout
+  </button>
+  
+  <script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>
